@@ -241,4 +241,19 @@ inline bool read_landmark_data(std::string filename, std::vector<LandmarkObs>& o
 	return true;
 }
 
+
+// custom enhancement
+
+/**
+ * multivariateGaussian -- function to calculate the multivariate Gaussian probability
+ * @param x, y: coordinates of the point
+ * @param mu_x, mu_y: mean coordinates (reference)
+ * @param sigma_x, sigma_y: standard deviations in x and y directions
+ */
+inline double multivariateGaussian(double x, double y, double mu_x, double mu_y, double sigma_x, double sigma_y) {
+
+  return exp( -( ((x-mu_x)*(x-mu_x) / (2*sigma_x*sigma_x)) + ((y-mu_y)*(y-mu_y) / (2*sigma_y*sigma_y)) ) ) / (2 * M_PI * sigma_x * sigma_y);
+}
+
+
 #endif /* HELPER_FUNCTIONS_H_ */

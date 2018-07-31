@@ -9,6 +9,8 @@
 #ifndef PARTICLE_FILTER_H_
 #define PARTICLE_FILTER_H_
 
+#include <map>
+#include <random>
 #include "helper_functions.h"
 
 struct Particle {
@@ -29,15 +31,30 @@ class ParticleFilter {
 	
 	// Number of particles to draw
 	int num_particles; 
-	
-	
-	
+
 	// Flag, if filter is initialized
 	bool is_initialized;
-	
+
 	// Vector of weights of all particles
 	std::vector<double> weights;
-	
+
+  // using the default basic random engine (used in several places)
+  std::default_random_engine generator{static_cast<long unsigned int>(time(0))};
+
+	// Associative array for the landmarks to facilite the retrieval of the coordinates of a landmark
+	// given by its id
+	std::map<int, LandmarkObs> landmark_mapping;
+
+	// Flag, whether the associative map array is initialized
+	bool is_landmark_mapping_initialized;
+
+	/**
+	 * initLandmarkMapping -- preparing an associative array (=a C++ map) with the landmark IDs as keys
+	 * and LandmarkObs as values so that the coordinates of a given landmark can be retrieved in O(1).
+	 * @param map_landmark_list: a vector of 'single_landmark_s' data
+	 */
+  void initLandmarkMapping(const std::vector<Map::single_landmark_s> &map_landmark_list);
+
 public:
 	
 	// Set of current particles
@@ -101,8 +118,8 @@ public:
 	 * Set a particles list of associations, along with the associations calculated world x,y coordinates
 	 * This can be a very useful debugging tool to make sure transformations are correct and assocations correctly connected
 	 */
-	Particle SetAssociations(Particle& particle, const std::vector<int>& associations,
-		                     const std::vector<double>& sense_x, const std::vector<double>& sense_y);
+	void SetAssociations(Particle& particle, const std::vector<int>& associations,
+		                   const std::vector<double>& sense_x, const std::vector<double>& sense_y);
 
 	
 	std::string getAssociations(Particle best);
