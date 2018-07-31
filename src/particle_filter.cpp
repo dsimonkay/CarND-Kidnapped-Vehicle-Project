@@ -290,40 +290,40 @@ void ParticleFilter::resample() {
   // NOTE: You may find std::discrete_distribution helpful here.
   //   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
 
-    // these variables will hold the new particles and weights data
-    std::vector<Particle> resampled_particles;
-    std::vector<double> resampled_weights;
+  // these variables will hold the new particles and weights data
+  std::vector<Particle> resampled_particles;
+  std::vector<double> resampled_weights;
 
-    // helper variables
-    double beta = 0.0;
-    auto max_weight_iterator = std::max_element(weights.begin(), weights.end());
-    double max_weight = *max_weight_iterator;
+  // helper variables
+  double beta = 0.0;
+  auto max_weight_iterator = std::max_element(weights.begin(), weights.end());
+  double max_weight = *max_weight_iterator;
 
-    // getting random numbers from a uniform distibution
-    std::uniform_real_distribution<double> dist_uniform(0.0, 2.0 * max_weight);
+  // getting random numbers from a uniform distibution
+  std::uniform_real_distribution<double> dist_uniform(0.0, 2.0 * max_weight);
 
-    // ...and getting the first random weight index
-    std::discrete_distribution<unsigned int> dist_index(weights.begin(), weights.end());
-    unsigned int index = dist_index(generator);
+  // ...and getting the first random weight index
+  std::discrete_distribution<unsigned int> dist_index(weights.begin(), weights.end());
+  unsigned int index = dist_index(generator);
 
-    // processing the particles
-    for ( int i = 0;  i < num_particles; ++i ) {
+  // processing the particles
+  for ( int i = 0;  i < num_particles; ++i ) {
 
-       beta += dist_uniform(generator);
+     beta += dist_uniform(generator);
 
-       // looking for the next candidate
-       while(weights[index] < beta) {
-         beta -= weights[index];
-         index = (index + 1) % num_particles;
-       }
+     // looking for the next candidate
+     while(weights[index] < beta) {
+       beta -= weights[index];
+       index = (index + 1) % num_particles;
+     }
 
-      resampled_particles.push_back(particles[index]);
-      resampled_weights.push_back(weights[index]);
-    }
+    resampled_particles.push_back(particles[index]);
+    resampled_weights.push_back(weights[index]);
+  }
 
-    // setting the new world order
-    particles = resampled_particles;
-    weights = resampled_weights;
+  // setting the new world order
+  particles = resampled_particles;
+  weights = resampled_weights;
 }
 
 
