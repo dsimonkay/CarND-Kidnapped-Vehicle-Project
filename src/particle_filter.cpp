@@ -41,7 +41,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 
     // creating a new particle
     Particle new_particle = {
-      -1,                      // "id", khm
+      -1,                     // "id", khm
       dist_x(generator),      // sampled x value
       dist_y(generator),      // sampled y value
       dist_theta(generator),  // sampled theta value
@@ -77,7 +77,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
   // processing all the particles
   for ( int i = 0;  i < num_particles;  ++i ) {
 
-    // implementing two different motion models depending on the yaw rate value
+    // implementing two different motion models depending on the yaw rate
     if ( abs(yaw_rate) < epsilon ) {
 
       // using the basic motion model (theta remains unchanged)
@@ -148,6 +148,7 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     const std::vector<LandmarkObs> &observations, const Map &map_landmarks) {
+
   // TODO: Update the weights of each particle using a mult-variate Gaussian distribution. You can read
   //   more about this distribution here: https://en.wikipedia.org/wiki/Multivariate_normal_distribution
   // NOTE: The observations are given in the VEHICLE'S coordinate system. Your particles are located
