@@ -108,38 +108,35 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 }
 
 
-void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
+void ParticleFilter::dataAssociation(std::vector<LandmarkObs> landmarks, std::vector<LandmarkObs>& observations) {
 
-  // TODO: Find the predicted measurement that is closest to each observed measurement and assign the 
+  // TODO: Find the landmark that is closest to each observed measurement and assign the 
   //   observed measurement to this particular landmark.
   // NOTE: this method will NOT be called by the grading code. But you will probably find it useful to 
   //   implement this method and use it as a helper during the updateWeights phase.
-
-  // ?.... I'm not sure whether 'predicted' expresses the right concept here.
-  // Whatever. I pass landmarks with fixed positions to the function, anyway.
 
   // defining the variables only once
   double distance, best_distance;
   size_t i, j;
   const size_t observation_count = observations.size();
-  const size_t landmark_count = predicted.size();
+  const size_t landmark_count = landmarks.size();
 
   for( i = 0;  i < observation_count;  ++i ) {
 
     // initializing helper variable for this observation
-    best_distance = 9999.0;
+    best_distance = std::numeric_limits<double>::max();
 
     for ( j = 0;  j < landmark_count;  ++j ) {
 
       // measuring the distance between the landmark and the observation
-      distance = dist(observations[i].x, observations[i].y, predicted[j].x, predicted[j].y);
+      distance = dist(observations[i].x, observations[i].y, landmarks[j].x, landmarks[j].y);
 
       // in case this is a better value compared to what we've already seen so far,
       // we'll mark it as the best one
       if ( distance < best_distance ) {
 
         best_distance = distance;
-        observations[i].id = predicted[j].id;
+        observations[i].id = landmarks[j].id;
       }
     }
   }
@@ -232,8 +229,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     // performing nearest neighbor association
     dataAssociation(landmarks_in_range, transformed_observations);
 
-    // this variable will hold the new weight of the particle
-    weight = 1.0;
+    // this variable will hold the new weight of the particle.
+    // in case there exist no observations for this particle, we set its weight to zero.
+    weight = observation_count > 0 ? 1.0 : 0.0;
 
     // processing the result
     for ( j = 0;  j < observation_count;  ++j ) {
@@ -321,9 +319,22 @@ void ParticleFilter::resample() {
     resampled_weights.push_back(weights[index]);
   }
 
-  // setting the new world order
-  particles = resampled_particles;
-  weights = resampled_weights;
+  // An alternative approach is to use std::discrete_distribution,
+  // http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
+  // std::random_device seed;
+  // std::mt19937 random_generator(seed());
+  // // sample particles based on their weight
+  // std::discrete_distribution<> sample(weights.begin(), weights.end());
+
+  // std::vector<Particle> new_particles(num_particles);
+  // for(auto & p : new_particles) {}
+  //   p = particles[sample(random_generator)];
+  // }
+  // particles = std::move(new_particles);
+
+  // new world order
+  particles = std::move(resampled_particles);
+  weights = std::move(resampled_weights);
 }
 
 
