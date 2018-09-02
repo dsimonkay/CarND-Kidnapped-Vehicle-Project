@@ -195,7 +195,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     // transforming observation to map coordinates
     for ( j = 0;  j < observation_count;  ++j ) {
 
-      // performing the homogenous transformation for the particle
+      // performing the homogeneous transformation for the particle
       observation.x = particles[i].x + cos(theta) * observations[j].x - sin(theta) * observations[j].y;
       observation.y = particles[i].y + sin(theta) * observations[j].x + cos(theta) * observations[j].y;
 
