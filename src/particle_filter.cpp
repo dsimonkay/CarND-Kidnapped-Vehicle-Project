@@ -15,7 +15,6 @@
 
 #include "particle_filter.h"
 
-using namespace std;
 
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
@@ -352,34 +351,34 @@ void ParticleFilter::SetAssociations(Particle& particle, const std::vector<int>&
 }
 
 
-string ParticleFilter::getAssociations(Particle best)
+std::string ParticleFilter::getAssociations(Particle best)
 {
-  vector<int> v = best.associations;
-  stringstream ss;
+  std::vector<int> v = best.associations;
+  std::stringstream ss;
     copy( v.begin(), v.end(), ostream_iterator<int>(ss, " "));
-    string s = ss.str();
+    std::string s = ss.str();
     s = s.substr(0, s.length()-1);  // get rid of the trailing space
     return s;
 }
 
 
-string ParticleFilter::getSenseX(Particle best)
+std::string ParticleFilter::getSenseX(Particle best)
 {
   vector<double> v = best.sense_x;
-  stringstream ss;
+  std::stringstream ss;
     copy( v.begin(), v.end(), ostream_iterator<float>(ss, " "));
-    string s = ss.str();
+    std::string s = ss.str();
     s = s.substr(0, s.length()-1);  // get rid of the trailing space
     return s;
 }
 
 
-string ParticleFilter::getSenseY(Particle best)
+std::string ParticleFilter::getSenseY(Particle best)
 {
-  vector<double> v = best.sense_y;
-  stringstream ss;
+  std::vector<double> v = best.sense_y;
+  std::stringstream ss;
     copy( v.begin(), v.end(), ostream_iterator<float>(ss, " "));
-    string s = ss.str();
+    std::string s = ss.str();
     s = s.substr(0, s.length()-1);  // get rid of the trailing space
     return s;
 }
