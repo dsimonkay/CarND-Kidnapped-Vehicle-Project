@@ -28,9 +28,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   num_particles = 100;
 
   // creating normal (Gaussian) distributions for x, y and theta
-  normal_distribution<double> dist_x(x, std[0]);
-  normal_distribution<double> dist_y(y, std[1]);
-  normal_distribution<double> dist_theta(theta, std[2]);
+  std::normal_distribution<double> dist_x(x, std[0]);
+  std::normal_distribution<double> dist_y(y, std[1]);
+  std::normal_distribution<double> dist_theta(theta, std[2]);
 
   // initial weight
   const double new_weight = 1.0;
@@ -63,7 +63,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
 
   // TODO: Add measurements to each particle and add random Gaussian noise.
-  // NOTE: When adding noise you may find std::normal_distribution and std::default_random_engine useful.
+  // NOTE: When adding noise you may find std::
+  stribution and std::default_random_engine useful.
   //  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
   //  http://www.cplusplus.com/reference/random/default_random_engine/
 
@@ -95,9 +96,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 
     // creating normal (Gaussian) distributions accounting for measurement noise
     // around the calculated values acting as means
-    normal_distribution<double> dist_x(particles[i].x, std_pos[0]);
-    normal_distribution<double> dist_y(particles[i].y, std_pos[1]);
-    normal_distribution<double> dist_theta(particles[i].theta, std_pos[2]);
+    std::normal_distribution<double> dist_x(particles[i].x, std_pos[0]);
+    std::normal_distribution<double> dist_y(particles[i].y, std_pos[1]);
+    std::normal_distribution<double> dist_theta(particles[i].theta, std_pos[2]);
 
     // setting particle position -- including measurement noise
     particles[i].x = dist_x(generator);
